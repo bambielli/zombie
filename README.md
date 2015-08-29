@@ -9,4 +9,4 @@ Three floyds used to be vocal about when zombie was available for pickup at the 
 
 The mission of this site is to give a voice back to Zombie Dust searchers across the Chicagoland area: To inform the masses when Zombie goes back on sale at the brewpub, so loyal supporters can make the pilgrimmage back to floyds to refuel and restock.
 
-Stay Zombie my friends.
+In Floyds we trust...to provide zombie at regular intervals throughout the year!
