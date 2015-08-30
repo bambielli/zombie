@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 import os
 import redis
 
-r = redis.from_url(os.environ.get("REDIS_URL"))# Create your views here.
+r = redis.StrictRedis.from_url(os.environ.get("REDIS_URL"))# Create your views here.
 
 def zombie_on(request):
 	r.set('zombie', 'Yes')

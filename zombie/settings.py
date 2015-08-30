@@ -13,9 +13,9 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 import dj_database_url
-from urllib.parse import urlparse
+# from urllib.parse import urlparse
 
-redis_url = urlparse(os.environ.get('REDIS_URL'))
+# redis_url = urlparse(os.environ.get('REDIS_URL'))
 # CACHES = {
 #     "default": {
 #          "BACKEND": "redis_cache.RedisCache",
