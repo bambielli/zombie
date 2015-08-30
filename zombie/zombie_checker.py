@@ -18,6 +18,7 @@ def main():
 	else:
 		return 1
 
+#this script should eventually send a POST to a URL that is hooked up to receive posts, and update the frontEnd.
 if not main():
 	print ('Zombie')
 else:
