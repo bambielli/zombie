@@ -21,9 +21,9 @@ def main():
 
 #this script should eventually send a POST to a URL that is hooked up to receive posts, and update the frontEnd.
 if not main():
-	print ('zombie')
+	print ('Zombie')
 	urllib.request.urlopen('http://www.doesfloydshavezombie.com/'+os.environ.get('zombie_on'))
 else:
-	print ('no zombie')
+	print ('No zombie')
 	urllib.request.urlopen('http://www.doesfloydshavezombie.com/'+os.environ.get('zombie_off'))
 

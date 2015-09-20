@@ -40,7 +40,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
-SECRET_KEY = "waoinweoinadpioansdpoifansdoifnasoidnfapoisdn"
+SECRET_KEY = "derp"
 # Application definition
 
 INSTALLED_APPS = (
