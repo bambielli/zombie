@@ -7,3 +7,6 @@ class EmailForm(ModelForm):
 	class Meta:
 		model = Email
 		fields = ['email']
+		widgets = {
+			'email': forms.EmailInput(attrs={'placeholder': 'Enter Email Address'})
+		}

@@ -1,11 +1,20 @@
-<h3>{{messages}}</h3>
+<style media="screen" type="text/css">
 
-<h1>{{zombie}}</h1>
+.errorlist {
+	color: red;
+}
+
+h3 {
+	color: green;
+}
+</style>
+
+<h1 style="text-align:center; font-size: 100px; margin-bottom: 30px; margin-top: 10px;">{{zombie}}</h1>
 </br>
-</br>
-</br>
-<p>Add your email to be informed within a half hour of when floyds has zombie</p>
-<form method="POST" action="">
+
+<h3 style="text-align:center">{{messages}}</h3>
+<p style="text-align:center">Add your email to be informed within a half hour of when floyds has zombie</p>
+<form style="text-align:center" method="POST" action="">
 	{% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Submit" />
