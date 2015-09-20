@@ -44,7 +44,8 @@ def zombie_off(request):
 def index(request):
 	zombie = r.get('zombie') or 'No'
 	messages = ''
-	if request.method.decode("utf-8") == 'POST':
+
+	if request.method == 'POST':
 		# create a form instance and populate it with data from the request:
 		form = EmailForm(request.POST)
 		# check whether it's valid:
