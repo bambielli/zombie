@@ -12,12 +12,18 @@ r = redis.StrictRedis.from_url(os.environ.get("REDIS_URL"))
 
 # Create your views here.
 def zombie_on(request):
-	r.set('zombie', 'Yes')
-	email_qset = Email.objects.all()
 	import pdb
 	pdb.set_trace()
-	emails = [email.email for email in email_qset]
-	send_mail('Zombie is in stock!', 'That sweet zombie nectar is in stock. go get it!', EMAIL_HOST_USER, emails, fail_silently=False)
+	current_zombie_state = r.get('zombie')
+
+	if current_zombie_state != 'Yes':
+		#if zombie is not already 'Yes', then set it and send emails
+		r.set('zombie', 'Yes')
+		email_qset = Email.objects.all()
+		emails = [email.email for email in email_qset]
+		send_mail('Zombie is in stock!', 'That sweet zombie nectar is in stock. go get it!', EMAIL_HOST_USER, emails, fail_silently=False)
+
+	#if it was already 'yes', then just render index
 	return redirect('index')
 
 def zombie_off(request):
