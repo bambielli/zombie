@@ -10,7 +10,6 @@ from django.http import HttpResponseRedirect
 
 r = redis.StrictRedis.from_url(os.environ.get("REDIS_URL"))
 
-# Create your views here.
 def zombie_on(request):
 	current_zombie_state = r.get('zombie')
 
