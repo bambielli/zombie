@@ -14,7 +14,7 @@ def zombie_on(request):
 	current_zombie_state = r.get('zombie')
 	print ("current zombie state is:")
 	print (current_zombie_state)
-	if current_zombie_state != 'Yes':
+	if str(current_zombie_state) != 'Yes':
 		#if zombie is not already 'Yes', then set it and send emails
 		print ("Turning zombie on (state must have been No)")
 		r.set('zombie', 'Yes')
@@ -29,7 +29,7 @@ def zombie_off(request):
 	current_zombie_state = r.get('zombie')
 	print ("current zombie state is:")
 	print (current_zombie_state)
-	if current_zombie_state != 'No':
+	if str(current_zombie_state) != 'No':
 		print ("Turning zombie off (state must have been Yes)")
 		r.set('zombie', 'No')
 		email_qset = Email.objects.all()
