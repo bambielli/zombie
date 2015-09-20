@@ -14,7 +14,7 @@ def zombie_on(request):
 	current_zombie_state = r.get('zombie')
 	print ("current zombie state is:")
 	print (current_zombie_state)
-	if str(current_zombie_state) != 'Yes':
+	if current_zombie_state.decode("utf-8") != 'Yes':
 		#if zombie is not already 'Yes', then set it and send emails
 		print ("Turning zombie on (state must have been No)")
 		r.set('zombie', 'Yes')
@@ -29,7 +29,7 @@ def zombie_off(request):
 	current_zombie_state = r.get('zombie')
 	print ("current zombie state is:")
 	print (current_zombie_state)
-	if str(current_zombie_state) != 'No':
+	if current_zombie_state.decode("utf-8") != 'No':
 		print ("Turning zombie off (state must have been Yes)")
 		r.set('zombie', 'No')
 		email_qset = Email.objects.all()
@@ -44,13 +44,13 @@ def zombie_off(request):
 def index(request):
 	zombie = r.get('zombie') or 'No'
 	messages = ''
-	if request.method == 'POST':
+	if request.method.decode("utf-8") == 'POST':
 		# create a form instance and populate it with data from the request:
 		form = EmailForm(request.POST)
 		# check whether it's valid:
 		if form.is_valid():
 			Email.objects.create(email=form.cleaned_data['email'])
-			messages = 'Your email was successfully submitted'
+			messages = "Your email was successfully submitted"
 	else:
 		form = EmailForm()
 
