@@ -12,11 +12,11 @@ r = redis.StrictRedis.from_url(os.environ.get("REDIS_URL"))
 
 def zombie_on(request):
 	current_zombie_state = r.get('zombie')
-	print "current zombie state is:"
-	print current_zombie_state
+	print ("current zombie state is:")
+	print (current_zombie_state)
 	if current_zombie_state != 'Yes':
 		#if zombie is not already 'Yes', then set it and send emails
-		print "Turning zombie on (state must have been No)"
+		print ("Turning zombie on (state must have been No)")
 		r.set('zombie', 'Yes')
 		email_qset = Email.objects.all()
 		emails = [email.email for email in email_qset]
@@ -27,10 +27,10 @@ def zombie_on(request):
 
 def zombie_off(request):
 	current_zombie_state = r.get('zombie')
-	print "current zombie state is:"
-	print current_zombie_state
+	print ("current zombie state is:")
+	print (current_zombie_state)
 	if current_zombie_state != 'No':
-		print "Turning zombie off (state must have been Yes)"
+		print ("Turning zombie off (state must have been Yes)")
 		r.set('zombie', 'No')
 		email_qset = Email.objects.all()
 		emails = [email.email for email in email_qset] #emails in the database
