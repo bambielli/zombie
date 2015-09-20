@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.core.mail import send_mail
+from django.core.mail.message import EmailMessage
 from scraper.models import Email
 import os
 import redis
@@ -19,8 +19,8 @@ def zombie_on(request):
 		r.set('zombie', 'Yes')
 		email_qset = Email.objects.all()
 		emails = [email.email for email in email_qset]
-		send_mail('Zombie is in stock!', 'That sweet zombie nectar is in stock. go get it!', EMAIL_HOST_USER, emails, fail_silently=False)
-
+		emails_to_send = EmailMessage('Zombie is in stock!', 'That sweet zombie nectar is in stock. Go get it!', EMAIL_HOST_USER, [], emails)
+		emails_to_send.send(fail_silently=False)
 	#if it was already 'yes', then just render index
 	return redirect('index')
 
@@ -31,8 +31,11 @@ def zombie_off(request):
 
 		r.set('zombie', 'No')
 		email_qset = Email.objects.all()
-		emails = [email.email for email in email_qset]
-		send_mail('Floyds just ran out of zombie...', 'Zombie just ran out of stock at floyds...maybe next time!', EMAIL_HOST_USER, emails, fail_silently=False)
+		emails = [email.email for email in email_qset] #emails in the database
+		#create an EmailMessage so you can use BCC
+		emails_to_send = EmailMessage('Floyds just ran out of zombie...', 'Zombie just ran out of stock at floyds...maybe next time!', EMAIL_HOST_USER, [], emails)
+		#send the EmailMessage
+		emails_to_send.send(fail_silently=False)
 
 	return redirect('index')
 
