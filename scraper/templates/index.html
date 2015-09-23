@@ -4,6 +4,15 @@
 	color: red;
 }
 
+.center {
+	text-align: center;
+}
+
+h1 {
+font-size: 100px;
+margin: 10 0 30 0;
+}
+
 h3 {
 	color: green;
 }
@@ -15,13 +24,17 @@ ul {
 
 </style>
 
-<h1 style="text-align:center; font-size: 100px; margin-bottom: 30px; margin-top: 10px;">{{zombie}}</h1>
+<h1 class="center">{{zombie}}</h1>
 </br>
 
-<h3 style="text-align:center">{{messages}}</h3>
-<p style="text-align:center">Add your email to be informed within a half hour of when floyds has zombie</p>
-<form style="text-align:center" method="POST" action="">
+<h3 class="center">{{messages}}</h3>
+<p class="center">Add your email to be informed within a half hour of when floyds has zombie</p>
+<form class="center" method="POST" action="">
 	{% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Submit" />
 </form>
+
+<div class="center">
+	<a  href="unsubscribe/">Click Here to Unsubscribe</a>
+</div>
