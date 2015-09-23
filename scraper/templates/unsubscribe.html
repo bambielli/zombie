@@ -1,0 +1,24 @@
+<style media="screen" type="text/css">
+
+.errorlist {
+	color: red;
+}
+
+h3 {
+	color: green;
+}
+
+ul {
+	list-style-type: none;
+	padding-left: 0px;
+}
+
+</style>
+
+<h3 style="text-align:center">{{messages}}</h3>
+<p style="text-align:center">Enter your email here to unsubscribe from our mailing list</p>
+<form style="text-align:center" method="POST" action="">
+	{% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submit" />
+</form>

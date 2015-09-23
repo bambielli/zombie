@@ -11,26 +11,30 @@ from django.http import HttpResponseRedirect
 r = redis.StrictRedis.from_url(os.environ.get("REDIS_URL"))
 
 def zombie_on(request):
+	"""
+	Changes the zombie state from No to Yes
+	"""
 	current_zombie_state = r.get('zombie')
-	print ("current zombie state is:")
-	print (current_zombie_state)
+
 	if current_zombie_state.decode("utf-8") != 'Yes':
 		#if zombie is not already 'Yes', then set it and send emails
-		print ("Turning zombie on (state must have been No)")
 		r.set('zombie', 'Yes')
 		email_qset = Email.objects.all()
 		emails = [email.email for email in email_qset]
 		emails_to_send = EmailMessage('Zombie is in stock!', 'That sweet zombie nectar is in stock. Go get it!', EMAIL_HOST_USER, [], emails)
 		emails_to_send.send(fail_silently=False)
-	#if it was already 'yes', then just render index
+
+	#if it was already 'yes', then just redirect to index
 	return redirect('index')
 
 def zombie_off(request):
+	"""
+	Changes the zombie state from Yes to No
+	"""
 	current_zombie_state = r.get('zombie')
-	print ("current zombie state is:")
-	print (current_zombie_state)
+
 	if current_zombie_state.decode("utf-8") != 'No':
-		print ("Turning zombie off (state must have been Yes)")
+		#If zombie is not already 'No', then set it and send emails.
 		r.set('zombie', 'No')
 		email_qset = Email.objects.all()
 		emails = [email.email for email in email_qset] #emails in the database
@@ -39,7 +43,34 @@ def zombie_off(request):
 		#send the EmailMessage
 		emails_to_send.send(fail_silently=False)
 
+	#if it was already no, then just redirect to index
 	return redirect('index')
+
+def unsubscribe(request):
+	"""
+	This view is used to process response from a user who wishes to unsubscribe from the app.
+	"""
+	messages = ''
+
+	# If response is post, user has submitted an email to be deleted from our system
+	if request.method == 'POST':
+		form = EmailForm(request.POST)
+
+		# Confirm a valid submission to the form
+		if form.is_valid():
+
+			email_to_delete = Email.objects.filter(email=form.cleaned_data['email'])
+
+			if len(email_to_delete) > 0: #if an email was found...
+				email_to_delete.delete() #...delete the email
+				messages = "You have successfully unsubscribed"
+			else: #else, push a response that we do not have record of that email in our system.s
+				messages = "That email does not exist in our systems. Please contact us if you think this is incorrect!"
+
+	else: #else it was just a normal get to the url, and we should render the unsubscribe form
+		form = EmailForm()
+
+	return render(request, 'unsubscribe.html', {'form': form, 'messages': messages})
 
 def index(request):
 	zombie = r.get('zombie') or 'No'
