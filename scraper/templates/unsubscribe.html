@@ -17,7 +17,7 @@ ul {
 
 <h3 style="text-align:center">{{messages}}</h3>
 <p style="text-align:center">Enter your email here to unsubscribe from our mailing list</p>
-<form style="text-align:center" method="POST" action="">
+<form style="text-align:center" method="POST" action="/unsubscribe/">
 	{% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Submit" />
