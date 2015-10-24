@@ -50,27 +50,23 @@ def unsubscribe(request):
 	"""
 	This view is used to process response from a user who wishes to unsubscribe from the app.
 	"""
-	messages = ''
-
 	# If response is post, user has submitted an email to be deleted from our system
+	success = ''
+	errors = ''
 	if request.method == 'POST':
-		form = EmailForm(request.POST)
 
-		# Confirm a valid submission to the form
-		if form.is_valid():
+		email = request.POST['email']
 
-			email_to_delete = Email.objects.filter(email=form.cleaned_data['email'])
+		#see if we can find the email
+		email_to_delete = Email.objects.filter(email=email)
 
-			if len(email_to_delete) > 0: #if an email was found...
-				email_to_delete.delete() #...delete the email
-				messages = "You have successfully unsubscribed"
-			else: #else, push a response that we do not have record of that email in our system.s
-				messages = "That email does not exist in our systems. Please contact us if you think this is incorrect!"
+		if len(email_to_delete) > 0: #if an email was found...
+			email_to_delete.delete() #...delete the email
+			success = "You have successfully unsubscribed"
+		else: #else, push a response that we do not have record of that email in our system.
+			errors = "That email does not exist in our systems. Please contact us if you think this is incorrect!"
 
-	else: #else it was just a normal get to the url, and we should render the unsubscribe form
-		form = EmailForm()
-
-	return render(request, 'unsubscribe.html', {'form': form, 'messages': messages})
+	return render(request, 'unsubscribe.html', {'success':success, 'errors':errors })
 
 def index(request):
 	zombie = r.get('zombie') or 'No'

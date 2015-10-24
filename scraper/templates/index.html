@@ -1,11 +1,10 @@
 <style media="screen" type="text/css">
+body {
+	text-align: center;
+}
 
 .errorlist {
 	color: red;
-}
-
-.center {
-	text-align: center;
 }
 
 h1 {
@@ -13,35 +12,29 @@ font-size: 100px;
 margin: 10 0 30 0;
 }
 
-h3 {
-	color: green;
-}
-
 ul {
 	list-style-type: none;
 	padding-left: 0px;
 }
-
 </style>
 
-<h1 class="center">{{zombie}}</h1>
-</br>
+<h1>{{zombie}}</h1>
 
-<h3 class="center">{{messages}}</h3>
-<p class="center">Add your email to be informed within a half hour of when floyds has zombie</p>
+<h3>{{messages}}</h3>
+<h3>{{errors}}</h3>
+<p>Add your email to be informed within a half hour of when floyds has zombie</p>
 <form class="center" method="POST" action="">
 	{% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Submit" />
 </form>
 
-<div class="center">
+<div>
 	<a  href="unsubscribe/">Click Here to Unsubscribe</a>
 </div>
 </br>
-</br>
-<div class="center">
-       <span style="font-size:12px">
-               Site created by: <a href="mailto:someone@example.com">brian.ambielli@gmail.com</a>
-       </span>
+<div>
+	<span style="font-size:12px; margin-top:12px;">
+		Site created by: <a href="mailto:brian.ambielli@gmail.com">brian.ambielli@gmail.com</a>
+	</span>
 </div>
