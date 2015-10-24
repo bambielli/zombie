@@ -1,28 +1,43 @@
-from django.shortcuts import render, redirect
-from django.core.mail.message import EmailMessage
+from django.shortcuts import render, redirect, get_object_or_404
+from django.core.mail.message import EmailMultiAlternatives
 from scraper.models import Email
 import os
 import redis
 from zombie.settings import EMAIL_HOST_USER
 from scraper.forms.model_forms import EmailForm
-from django.http import HttpResponseRedirect
-
 
 r = redis.StrictRedis.from_url(os.environ.get("REDIS_URL"))
+
+
+def _send_email(subject, msg_to_send, host, email_qset):
+	"""
+	Takes the subject, text body, host and qset of email objects
+	sends emails to each of the emails in email_qset, creating a unique unsubscribe link for each.
+	"""
+	for email in email_qset:
+		unsub_link = 'http://'+ host + email.create_unsubscribe_link()
+		html_content = '<p>'+msg_to_send+'</p></br><a href="'+unsub_link+'">click here to unsubscribe</a>'
+		email_to_send = EmailMultiAlternatives(subject, msg_to_send, EMAIL_HOST_USER, [email.email])
+		email_to_send.attach_alternative(html_content, "text/html")
+		email_to_send.msg_subtype = 'html'
+		email_to_send.send(fail_silently=False)
 
 def zombie_on(request):
 	"""
 	Changes the zombie state from No to Yes
+	Sends email if the state has changed.
 	"""
 	current_zombie_state = r.get('zombie')
-
 	if current_zombie_state.decode("utf-8") != 'Yes':
 		#if zombie is not already 'Yes', then set it and send emails
 		r.set('zombie', 'Yes')
+
+		subject = 'Zombie is in stock!'
+		text_content = 'That sweet Zombie nectar is in stock. Go get it!'
+		host = request.get_host()
 		email_qset = Email.objects.all()
-		emails = [email.email for email in email_qset]
-		emails_to_send = EmailMessage('Zombie is in stock!', 'That sweet zombie nectar is in stock. Go get it!', EMAIL_HOST_USER, [], emails)
-		emails_to_send.send(fail_silently=False)
+
+		_send_email(subject, text_content, host, email_qset)
 
 	#if it was already 'yes', then just redirect to index
 	return redirect('index')
@@ -30,43 +45,38 @@ def zombie_on(request):
 def zombie_off(request):
 	"""
 	Changes the zombie state from Yes to No
+	Sends email if the state has changed.
 	"""
 	current_zombie_state = r.get('zombie')
-
 	if current_zombie_state.decode("utf-8") != 'No':
 		#If zombie is not already 'No', then set it and send emails.
 		r.set('zombie', 'No')
+
+		subject = 'Floyds just ran out of zombie...'
+		text_content = 'Zombie just ran out of stock at floyds...maybe next time!'
+		host = request.get_host()
 		email_qset = Email.objects.all()
-		emails = [email.email for email in email_qset] #emails in the database
-		#create an EmailMessage so you can use BCC
-		emails_to_send = EmailMessage('Floyds just ran out of zombie...', 'Zombie just ran out of stock at floyds...maybe next time!', EMAIL_HOST_USER, [], emails)
-		#send the EmailMessage
-		emails_to_send.send(fail_silently=False)
+
+		_send_email(subject, text_content, host, email_qset)
 
 	#if it was already no, then just redirect to index
 	return redirect('index')
 
-def unsubscribe(request):
+def unsubscribe(request, email, token):
 	"""
-	This view is used to process response from a user who wishes to unsubscribe from the app.
+	This view is used by the link in the emails that are sent out to unsubscribe users
 	"""
-	# If response is post, user has submitted an email to be deleted from our system
+	email = get_object_or_404(Email, email=email)
 	success = ''
-	errors = ''
-	if request.method == 'POST':
+	error = ''
+	if email.check_token(token):
+		# unsubscribe them
+		email.delete()
+		success = "You successfully unsubscribed"
+	else:
+		errors = "invalid token. try again"
 
-		email = request.POST['email']
-
-		#see if we can find the email
-		email_to_delete = Email.objects.filter(email=email)
-
-		if len(email_to_delete) > 0: #if an email was found...
-			email_to_delete.delete() #...delete the email
-			success = "You have successfully unsubscribed"
-		else: #else, push a response that we do not have record of that email in our system.
-			errors = "That email does not exist in our systems. Please contact us if you think this is incorrect!"
-
-	return render(request, 'unsubscribe.html', {'success':success, 'errors':errors })
+	return render(request, 'unsubscribe.html', {'success':success, 'error': error})
 
 def index(request):
 	zombie = r.get('zombie') or 'No'

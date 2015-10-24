@@ -19,10 +19,9 @@ ul {
 </style>
 
 <h1>{{zombie}}</h1>
+<h3 style="color: green;">{{messages}}</h3>
 
-<h3>{{messages}}</h3>
-<h3>{{errors}}</h3>
-<p>Add your email to be informed within a half hour of when floyds has zombie</p>
+<p>Add your email to be informed within a half hour of when 3Floyds has Zombie Dust</p>
 <form class="center" method="POST" action="">
 	{% csrf_token %}
     {{ form.as_p }}
@@ -31,7 +30,8 @@ ul {
 
 </br>
 <div>
-	<span style="font-size:12px; margin-top:12px;">
+	<div style="font-size:14px; margin-top:12px;">To unsubscribe, click on the unsubscribe link in one of the notification emails or contact us at the email below</div>
+	<div style="font-size:12px; margin-top:12px;">
 		Site created by: <a href="mailto:brian.ambielli@gmail.com">brian.ambielli@gmail.com</a>
-	</span>
+	</div>
 </div>

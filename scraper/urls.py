@@ -8,6 +8,8 @@ zombie_off = os.environ.get('zombie_off')
 urlpatterns = [
 	url(zombie_on, views.zombie_on, name='zombie_on'),
 	url(zombie_off, views.zombie_off, name='zombie_off'),
-	url(r'^unsubscribe/$', views.unsubscribe, name='unsubscribe'),
+	# url(r'^unsubscribe/$', views.unsubscribe, name='unsubscribe'),
+	url(r'^unsubscribe/(?P<email>[\w.@+-]+)/(?P<token>[\w.:\-_=]+)/$', views.unsubscribe,
+     name='unsubscribe'),
 	url(r'^$', views.index, name='index'),
 ]
