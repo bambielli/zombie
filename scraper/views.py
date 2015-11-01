@@ -74,9 +74,9 @@ def unsubscribe(request, email, token):
 		email.delete()
 		success = "You successfully unsubscribed"
 	else:
-		errors = "invalid token. try again"
+		errors = "Invalid token. Please contact us at the email below to unsubscribe"
 
-	return render(request, 'unsubscribe.html', {'success':success, 'error': error})
+	return render(request, 'unsub_email.html', {'success':success, 'error': error})
 
 def index(request):
 	zombie = r.get('zombie') or 'No'
@@ -93,3 +93,26 @@ def index(request):
 		form = EmailForm()
 
 	return render(request, 'index.html', {'zombie': zombie, 'form': form, 'messages': messages})
+
+def unsub_email(request):
+	success = ''
+	error = ''
+	if request.method == "POST":
+		import pdb
+		pdb.set_trace()
+		email = Email.objects.filter(email=request.POST['email'])
+
+		if len(email): #found an email in our system with that address
+			subject = "Unsubscribe from doesfloydshavezombie.com"
+			text_content = "Click the link below to unsubscribe from our notifications"
+			host = request.get_host()
+			_send_email(subject, text_content, host, email)
+
+			success = "Please check your email to unsubscribe from our notifications"
+			return render(request, 'unsubscribe.html', {'success':success, 'error': error})
+
+		else: #no email in our system with that address
+			error = "Sorry, there was no email in our system with that address! If you think this was an error, please contact us at the email address below."
+			return render(request, 'unsubscribe.html', {'success':success, 'error': error})
+	else: #just a get to the url
+		return render(request, 'unsubscribe.html', {'success':success, 'error': error})
