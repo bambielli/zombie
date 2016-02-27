@@ -6,7 +6,7 @@ import redis
 from zombie.settings import EMAIL_HOST_USER
 from scraper.forms.model_forms import EmailForm
 
-r = redis.StrictRedis.from_url(os.environ.get("REDIS_URL"))
+red = redis.StrictRedis.from_url(os.environ.get("REDIS_URL"))
 
 
 def _send_email(subject, msg_to_send, host, email_qset):
@@ -27,10 +27,11 @@ def zombie_on(request):
 	Changes the zombie state from No to Yes
 	Sends email if the state has changed.
 	"""
-	current_zombie_state = r.get('zombie')
+
+	current_zombie_state = red.get('zombie')
 	if current_zombie_state.decode("utf-8") != 'Yes':
 		#if zombie is not already 'Yes', then set it and send emails
-		r.set('zombie', 'Yes')
+		red.set('zombie', 'Yes')
 
 		subject = 'Zombie is in stock!'
 		text_content = 'That sweet Zombie nectar is in stock. Go get it!'
@@ -47,10 +48,11 @@ def zombie_off(request):
 	Changes the zombie state from Yes to No
 	Sends email if the state has changed.
 	"""
-	current_zombie_state = r.get('zombie')
+
+	current_zombie_state = red.get('zombie')
 	if current_zombie_state.decode("utf-8") != 'No':
 		#If zombie is not already 'No', then set it and send emails.
-		r.set('zombie', 'No')
+		red.set('zombie', 'No')
 
 		subject = 'Floyds just ran out of zombie...'
 		text_content = 'Zombie just ran out of stock at floyds...maybe next time!'
@@ -79,7 +81,13 @@ def unsubscribe(request, email, token):
 	return render(request, 'unsub_email.html', {'success':success, 'error': error})
 
 def index(request):
-	zombie = r.get('zombie') or 'No'
+
+	zombie = red.get('zombie')
+	if not zombie:
+		#this re-sets the key if it gets deleted for whatever reason
+		red.set('zombie', 'No')
+		zombie = 'No'
+
 	messages = ''
 
 	if request.method == 'POST':
@@ -97,9 +105,8 @@ def index(request):
 def unsub_email(request):
 	success = ''
 	error = ''
+
 	if request.method == "POST":
-		import pdb
-		pdb.set_trace()
 		email = Email.objects.filter(email=request.POST['email'])
 
 		if len(email): #found an email in our system with that address
