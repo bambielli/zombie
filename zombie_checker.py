@@ -35,8 +35,8 @@ def main ():
 
 if not main(): # if main returns 0 (success), then hit the success url
 	print ('Zombie')
-	requests.get('http://localhost:8000'+os.environ.get('zombie_on'))
+	requests.get('http://www.doesfloydshavezombie.com/'+os.environ.get('zombie_on'))
 else: # main did not find zombie, so hit the unsuccessful url
 	print ('No zombie')
-	requests.get('http://localhost:8000'+os.environ.get('zombie_off'))
+	requests.get('http://www.doesfloydshavezombie.com/'+os.environ.get('zombie_off'))
 
