@@ -89,7 +89,14 @@ WSGI_APPLICATION = 'zombie.wsgi.application'
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
 DATABASES = {
-  'default': dj_database_url.config()
+  'default': {
+    'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    'NAME': 'zombiedb',
+    'USER': os.environ.get('PG_USER'),
+    'PASSWORD': os.environ.get('PG_PASSWORD'),
+    'HOST': '127.0.0.1',
+    'PORT': '5432'
+  }
 }
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

@@ -18,7 +18,7 @@ def main ():
 		'Accept-Language': 'en-US,en;q=0.8',
 		'Connection': 'keep-alive'} # pass headers so we don't look like a robot.
 
-	url = "http://www.3floyds.com/beers-to-go/"
+	url = "https://www.3floyds.com/beers-to-go/"
 
 	beer_string = requests.get(url, headers=hdrs).text;
 
@@ -35,8 +35,8 @@ def main ():
 
 if not main(): # if main returns 0 (success), then hit the success url
 	print ('Zombie')
-	requests.get('http://www.doesfloydshavezombie.com/'+os.environ.get('zombie_on'))
+	requests.get(os.environ.get('BASE_URL') + os.environ.get('zombie_on'))
 else: # main did not find zombie, so hit the unsuccessful url
 	print ('No zombie')
-	requests.get('http://www.doesfloydshavezombie.com/'+os.environ.get('zombie_off'))
+	requests.get(os.environ.get('BASE_URL') + os.environ.get('zombie_off'))
 
