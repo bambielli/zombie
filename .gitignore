@@ -1,6 +1,3 @@
 venv/*
 *.pyc
 staticfiles
-.zombienv
-mysite_nginx.conf
-uwsgi_params

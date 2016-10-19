@@ -1,1 +1,0 @@
-web: python manage.py migrate --noinput --fake-initial; gunicorn zombie.wsgi; python manage.py migrate;
