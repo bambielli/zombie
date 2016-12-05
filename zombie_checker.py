@@ -22,18 +22,15 @@ def main ():
 
 	beer_string = requests.get(url, headers=hdrs).text;
 
-	# cut the response string down to the section where they list the available beers for pickup
-	delete_index_pre = beer_string.index('6-Packs')
-	delete_index_post = beer_string.index('22-OZ')
-	beer_string = beer_string[delete_index_pre:delete_index_post]
-
-	if 'zombie' in beer_string or 'Zombie' in beer_string:
-		return 0
-	else:
+	#try to find the zombie-dust URL
+	try:
+		beer_string.index('https://www.3floyds.com/beer/zombie-dustssss/')
 		return 1
+	except ValueError:
+		return 0
 
 
-if not main(): # if main returns 0 (success), then hit the success url
+if main(): # if main returns 0 (success), then hit the success url
 	print ('Zombie')
 	requests.get(os.environ.get('BASE_URL') + os.environ.get('zombie_on'))
 else: # main did not find zombie, so hit the unsuccessful url
