@@ -24,7 +24,7 @@ def main ():
 
 	#try to find the zombie-dust URL
 	try:
-		beer_string.index('https://www.3floyds.com/beer/zombie-dustssss/')
+		beer_string.index('https://www.3floyds.com/beer/zombie-dust/')
 		return 1
 	except ValueError:
 		return 0
